@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'phone',
+        'address',
     ];
 
     /**
@@ -44,5 +47,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function books()
+    {
+        return $this->hasMany(Book::class);
+    }
+
+    public function exchangeRequests()
+    {
+        return $this->hasMany(BookExchange::class, 'requester_id');
+    }
+
+    public function receivedExchangeRequests()
+    {
+        return $this->hasMany(BookExchange::class, 'owner_id');
+    }
+
+    public function isSeller(): bool
+    {
+        return in_array($this->role, ['seller', 'admin']);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }
