@@ -5,7 +5,9 @@ use App\Http\Controllers\BookExchangeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [BookController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
