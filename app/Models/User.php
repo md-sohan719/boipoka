@@ -64,6 +64,16 @@ class User extends Authenticatable
         return $this->hasMany(BookExchange::class, 'owner_id');
     }
 
+    public function sentExchanges()
+    {
+        return $this->hasMany(BookExchange::class, 'requester_id');
+    }
+
+    public function receivedExchanges()
+    {
+        return $this->hasMany(BookExchange::class, 'owner_id');
+    }
+
     public function isSeller(): bool
     {
         return in_array($this->role, ['seller', 'admin']);
