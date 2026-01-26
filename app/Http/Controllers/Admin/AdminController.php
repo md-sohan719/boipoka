@@ -11,11 +11,11 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     /**
-     * Display the admin dashboard.
+     * Get statistics for admin panel.
      */
-    public function dashboard()
+    private function getStats()
     {
-        $stats = [
+        return [
             'total_users' => User::count(),
             'total_books' => Book::count(),
             'total_exchanges' => BookExchange::count(),
@@ -24,7 +24,14 @@ class AdminController extends Controller
             'sellers' => User::where('role', 'seller')->count(),
             'admins' => User::where('role', 'admin')->count(),
         ];
+    }
 
+    /**
+     * Display the admin dashboard.
+     */
+    public function dashboard()
+    {
+        $stats = $this->getStats();
         return view('admin.dashboard', compact('stats'));
     }
 
@@ -33,8 +40,9 @@ class AdminController extends Controller
      */
     public function users()
     {
+        $stats = $this->getStats();
         $users = User::latest()->paginate(20);
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'stats'));
     }
 
     /**
@@ -42,8 +50,9 @@ class AdminController extends Controller
      */
     public function books()
     {
+        $stats = $this->getStats();
         $books = Book::with('user')->latest()->paginate(20);
-        return view('admin.books.index', compact('books'));
+        return view('admin.books.index', compact('books', 'stats'));
     }
 
     /**
@@ -51,10 +60,11 @@ class AdminController extends Controller
      */
     public function exchanges()
     {
+        $stats = $this->getStats();
         $exchanges = BookExchange::with(['requester', 'owner', 'book'])
             ->latest()
             ->paginate(20);
-        return view('admin.exchanges.index', compact('exchanges'));
+        return view('admin.exchanges.index', compact('exchanges', 'stats'));
     }
 
     /**

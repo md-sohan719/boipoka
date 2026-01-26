@@ -1,0 +1,149 @@
+/* 
+ * Boipoka Admin Panel - Custom Styles
+ * AdminLTE 3.2.0 Customizations
+ */
+
+/* Brand Colors */
+:root {
+    --boipoka-primary: #007bff;
+    --boipoka-secondary: #6c757d;
+    --boipoka-success: #28a745;
+    --boipoka-info: #17a2b8;
+    --boipoka-warning: #ffc107;
+    --boipoka-danger: #dc3545;
+}
+
+/* Custom Card Styling */
+.card {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+/* Info Box Hover Effect */
+.info-box:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .15);
+}
+
+/* Badge Customization */
+.badge {
+    font-weight: 600;
+}
+
+/* Table Hover Effect */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, .025);
+}
+
+/* Button Customization */
+.btn {
+    border-radius: 0.25rem;
+}
+
+/* Alert Customization */
+.alert {
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: var(--boipoka-success);
+}
+
+.alert-danger {
+    border-left-color: var(--boipoka-danger);
+}
+
+.alert-warning {
+    border-left-color: var(--boipoka-warning);
+}
+
+.alert-info {
+    border-left-color: var(--boipoka-info);
+}
+
+/* Pagination Styling */
+.pagination {
+    margin-bottom: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .info-box {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Loading Animation */
+.preloader {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Footer Styling */
+.main-footer {
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Custom Utility Classes */
+.text-boipoka {
+    color: var(--boipoka-primary) !important;
+}
+
+.bg-boipoka {
+    background-color: var(--boipoka-primary) !important;
+}
+
+/* Card Header Enhancement */
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+/* Smooth Transitions */
+.nav-link,
+.btn,
+.card,
+.info-box {
+    transition: all 0.3s ease;
+}
+
+/* Focus States */
+.form-control:focus,
+.custom-select:focus {
+    border-color: var(--boipoka-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Print Styles */
+@media print {
+
+    .main-sidebar,
+    .main-header,
+    .main-footer,
+    .card-tools {
+        display: none !important;
+    }
+
+    .content-wrapper {
+        margin-left: 0 !important;
+    }
+}

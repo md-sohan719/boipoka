@@ -1,201 +1,226 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.admin')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | {{ config('app.name') }}</title>
-    <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
+@section('title', 'Dashboard')
+@section('page-title', 'Dashboard')
 
-<body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <span class="material-icons logo-icon">dashboard</span>
-                <span class="logo-text">{{ config('app.name') }}</span>
-            </div>
-            <button class="sidebar-toggle">
-                <span class="material-icons">menu</span>
-            </button>
-        </div>
+@section('breadcrumb')
+    <li class="breadcrumb-item active">Dashboard</li>
+@endsection
 
-        <div class="search-box">
-            <span class="material-icons">search</span>
-            <input type="text" placeholder="Search..." />
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="nav-item active">
-                <span class="material-icons">dashboard</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="{{ route('admin.users') }}" class="nav-item">
-                <span class="material-icons">people</span>
-                <span>Users</span>
-                <span class="badge">{{ $stats['total_users'] }}</span>
-            </a>
-
-            <a href="{{ route('admin.books') }}" class="nav-item">
-                <span class="material-icons">book</span>
-                <span>Books</span>
-                <span class="badge">{{ $stats['total_books'] }}</span>
-            </a>
-
-            <a href="{{ route('admin.exchanges') }}" class="nav-item">
-                <span class="material-icons">swap_horiz</span>
-                <span>Exchanges</span>
-                <span class="badge">{{ $stats['pending_exchanges'] }}</span>
-            </a>
-
-            <a href="{{ route('home') }}" class="nav-item">
-                <span class="material-icons">home</span>
-                <span>Back to Site</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-info">
-                    <p class="user-name">{{ auth()->user()->name }}</p>
-                    <p class="user-role">Admin</p>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="footer-item">
-                    <span class="material-icons">logout</span>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Top Bar -->
-        <header class="topbar">
-            <div class="breadcrumb">
-                <span class="material-icons bc-icon">dashboard</span>
-                <span class="bc-current">Dashboard</span>
-            </div>
-            <div class="topbar-actions">
-                <button class="btn-icon">
-                    <span class="material-icons">calendar_today</span>
-                    <span>{{ now()->format('M d, Y') }}</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- Stats Cards -->
-        <div class="stats-grid fade-in-up">
-            <div class="stat-card-lg">
-                <div class="stat-card-header">
-                    <span class="stat-label">Total Users</span>
-                    <span class="material-icons stat-icon-sm">people</span>
-                </div>
-                <div class="stat-card-body">
-                    <h2 class="stat-value-lg">{{ $stats['total_users'] }}</h2>
-                </div>
-                <div class="stat-card-footer">
-                    <span class="material-icons">info_outline</span>
-                    <span>Registered users</span>
-                </div>
-            </div>
-
-            <div class="stat-card-lg">
-                <div class="stat-card-header">
-                    <span class="stat-label">Total Books</span>
-                    <span class="material-icons stat-icon-sm">book</span>
-                </div>
-                <div class="stat-card-body">
-                    <h2 class="stat-value-lg">{{ $stats['total_books'] }}</h2>
-                </div>
-                <div class="stat-card-footer">
-                    <span class="material-icons">info_outline</span>
-                    <span>Listed books</span>
-                </div>
-            </div>
-
-            <div class="stat-card-lg">
-                <div class="stat-card-header">
-                    <span class="stat-label">Total Exchanges</span>
-                    <span class="material-icons stat-icon-sm">swap_horiz</span>
-                </div>
-                <div class="stat-card-body">
-                    <h2 class="stat-value-lg">{{ $stats['total_exchanges'] }}</h2>
-                </div>
-                <div class="stat-card-footer">
-                    <span class="material-icons">info_outline</span>
-                    <span>All exchanges</span>
-                </div>
-            </div>
-
-            <div class="stat-card-lg">
-                <div class="stat-card-header">
-                    <span class="stat-label">Pending Exchanges</span>
-                    <span class="material-icons stat-icon-sm">pending</span>
-                </div>
-                <div class="stat-card-body">
-                    <h2 class="stat-value-lg">{{ $stats['pending_exchanges'] }}</h2>
-                </div>
-                <div class="stat-card-footer">
-                    <span class="material-icons">info_outline</span>
-                    <span>Awaiting approval</span>
-                </div>
+@section('content')
+<!-- Info boxes -->
+<div class="row">
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Users</span>
+                <span class="info-box-number">{{ $stats['total_users'] }}</span>
             </div>
         </div>
+    </div>
+    
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-book"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Books</span>
+                <span class="info-box-number">{{ $stats['total_books'] }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="clearfix hidden-md-up"></div>
+    
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-exchange-alt"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Exchanges</span>
+                <span class="info-box-number">{{ $stats['total_exchanges'] }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-clock"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Pending Exchanges</span>
+                <span class="info-box-number">{{ $stats['pending_exchanges'] }}</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <!-- User Role Distribution -->
-        <div class="card mt-4">
+<!-- User Role Distribution -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">User Role Distribution</h3>
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    User Role Distribution
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
             <div class="card-body">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="material-icons stat-icon-lg">person</span>
-                        <div>
-                            <h4 class="stat-value-sm">{{ $stats['buyers'] }}</h4>
-                            <p class="stat-label-sm">Buyers</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="info-box bg-gradient-info">
+                            <span class="info-box-icon"><i class="fas fa-user"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Buyers</span>
+                                <span class="info-box-number">{{ $stats['buyers'] }}</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ $stats['total_users'] > 0 ? ($stats['buyers'] / $stats['total_users']) * 100 : 0 }}%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    {{ $stats['total_users'] > 0 ? number_format(($stats['buyers'] / $stats['total_users']) * 100, 1) : 0 }}% of total users
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="material-icons stat-icon-lg">store</span>
-                        <div>
-                            <h4 class="stat-value-sm">{{ $stats['sellers'] }}</h4>
-                            <p class="stat-label-sm">Sellers</p>
+                    
+                    <div class="col-md-4">
+                        <div class="info-box bg-gradient-success">
+                            <span class="info-box-icon"><i class="fas fa-store"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Sellers</span>
+                                <span class="info-box-number">{{ $stats['sellers'] }}</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ $stats['total_users'] > 0 ? ($stats['sellers'] / $stats['total_users']) * 100 : 0 }}%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    {{ $stats['total_users'] > 0 ? number_format(($stats['sellers'] / $stats['total_users']) * 100, 1) : 0 }}% of total users
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="material-icons stat-icon-lg">admin_panel_settings</span>
-                        <div>
-                            <h4 class="stat-value-sm">{{ $stats['admins'] }}</h4>
-                            <p class="stat-label-sm">Admins</p>
+                    
+                    <div class="col-md-4">
+                        <div class="info-box bg-gradient-danger">
+                            <span class="info-box-icon"><i class="fas fa-user-shield"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Admins</span>
+                                <span class="info-box-number">{{ $stats['admins'] }}</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ $stats['total_users'] > 0 ? ($stats['admins'] / $stats['total_users']) * 100 : 0 }}%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    {{ $stats['total_users'] > 0 ? number_format(($stats['admins'] / $stats['total_users']) * 100, 1) : 0 }}% of total users
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-bolt mr-1"></i>
+                    Quick Actions
+                </h3>
             </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-error">
-                {{ session('error') }}
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{{ route('admin.users') }}" class="btn btn-app bg-info">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('admin.books') }}" class="btn btn-app bg-success">
+                            <i class="fas fa-book"></i> Manage Books
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('admin.exchanges') }}" class="btn btn-app bg-warning">
+                            <span class="badge bg-danger">{{ $stats['pending_exchanges'] }}</span>
+                            <i class="fas fa-exchange-alt"></i> Exchanges
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('home') }}" class="btn btn-app bg-primary">
+                            <i class="fas fa-home"></i> View Site
+                        </a>
+                    </div>
+                </div>
             </div>
-        @endif
-    </main>
+        </div>
+    </div>
+</div>
 
-    <script src="{{ asset('admin/js/main.js') }}"></script>
-</body>
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header border-transparent">
+                <h3 class="card-title">
+                    <i class="fas fa-history mr-1"></i>
+                    System Overview
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Count</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Users</td>
+                                <td>{{ $stats['total_users'] }}</td>
+                                <td><span class="badge badge-info">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total Books</td>
+                                <td>{{ $stats['total_books'] }}</td>
+                                <td><span class="badge badge-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total Exchanges</td>
+                                <td>{{ $stats['total_exchanges'] }}</td>
+                                <td><span class="badge badge-primary">Processing</span></td>
+                            </tr>
+                            <tr>
+                                <td>Pending Exchanges</td>
+                                <td>{{ $stats['pending_exchanges'] }}</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
 
-</html>
+@push('styles')
+<!-- Additional styles if needed -->
+@endpush
+
+@push('scripts')
+<!-- Additional scripts if needed -->
+@endpush
