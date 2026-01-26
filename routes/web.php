@@ -17,6 +17,7 @@ Route::get('/dashboard', function () {
 Route::resource('books', BookController::class)->except(['index', 'show']);
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+Route::post('/books/{book}/purchase', [BookController::class, 'purchase'])->middleware('auth')->name('books.purchase');
 Route::get('/my-books', [BookController::class, 'myBooks'])->middleware('auth')->name('books.my-books');
 
 // Exchange routes

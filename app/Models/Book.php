@@ -10,6 +10,7 @@ class Book extends Model
 {
     protected $fillable = [
         'user_id',
+        'buyer_id',
         'title',
         'description',
         'author',
@@ -32,6 +33,11 @@ class Book extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function buyer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 
     public function exchangeRequests(): HasMany

@@ -170,4 +170,40 @@ class BookController extends Controller
         $books = Auth::user()->books()->latest()->paginate(12);
         return view('books.my-books', compact('books'));
     }
+
+    /**
+     * Handle book purchase.
+     */
+    public function purchase(Book $book)
+    {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to purchase books.');
+        }
+
+        // Check if user is trying to buy their own book
+        if ($book->user_id === Auth::id()) {
+            return redirect()->back()->with('error', 'You cannot purchase your own book.');
+        }
+
+        // Check if book is available for sale
+        if (!in_array($book->listing_type, ['sell', 'both'])) {
+            return redirect()->back()->with('error', 'This book is not available for purchase.');
+        }
+
+        // Check if book is still available
+        if ($book->status !== 'available') {
+            return redirect()->back()->with('error', 'This book is no longer available.');
+        }
+
+        // Mark book as sold
+        $book->update([
+            'status' => 'sold',
+            'buyer_id' => Auth::id(),
+        ]);
+
+        // Here you can add payment processing logic, order creation, notifications, etc.
+
+        return redirect()->route('books.show', $book)->with('success', 'Book purchased successfully! The seller will contact you soon.');
+    }
 }
