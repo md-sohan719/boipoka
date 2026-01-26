@@ -34,4 +34,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
+    Route::get('/books', [App\Http\Controllers\Admin\AdminController::class, 'books'])->name('books');
+    Route::get('/exchanges', [App\Http\Controllers\Admin\AdminController::class, 'exchanges'])->name('exchanges');
+
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'deleteUser'])->name('users.delete');
+    Route::delete('/books/{book}', [App\Http\Controllers\Admin\AdminController::class, 'deleteBook'])->name('books.delete');
+    Route::patch('/users/{user}/role', [App\Http\Controllers\Admin\AdminController::class, 'updateUserRole'])->name('users.update-role');
+});
+
 require __DIR__ . '/auth.php';

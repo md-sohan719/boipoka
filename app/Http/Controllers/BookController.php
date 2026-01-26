@@ -45,7 +45,18 @@ class BookController extends Controller
         // Featured books (latest 6)
         $featured = Book::with('user')->available()->latest()->take(6)->get();
 
-        return view('books.index', compact('books', 'categories', 'featured'));
+        // Grouped books per category for homepage sections (limit categories and books)
+        $categoryBooks = [];
+        foreach ($categories->take(8) as $cat) {
+            $categoryBooks[$cat] = Book::with('user')
+                ->available()
+                ->where('category', $cat)
+                ->latest()
+                ->take(8)
+                ->get();
+        }
+
+        return view('books.index', compact('books', 'categories', 'featured', 'categoryBooks'));
     }
 
     /**
