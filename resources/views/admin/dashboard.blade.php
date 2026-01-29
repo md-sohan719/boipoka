@@ -29,9 +29,9 @@
             </div>
         </div>
     </div>
-    
+
     <div class="clearfix hidden-md-up"></div>
-    
+
     <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
             <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-exchange-alt"></i></span>
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
             <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-clock"></i></span>
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="info-box bg-gradient-success">
                             <span class="info-box-icon"><i class="fas fa-store"></i></span>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="info-box bg-gradient-danger">
                             <span class="info-box-icon"><i class="fas fa-user-shield"></i></span>
