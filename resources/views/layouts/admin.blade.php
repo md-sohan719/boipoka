@@ -179,6 +179,15 @@
                             </a>
                         </li>
 
+                        <!-- Categories -->
+                        <li class="nav-item">
+                            <a href="{{ route('admin.categories.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tags"></i>
+                                <p>Categories</p>
+                            </a>
+                        </li>
+
                         <li class="nav-header">SETTINGS</li>
 
                         <!-- Back to Site -->

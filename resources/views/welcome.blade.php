@@ -145,27 +145,18 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            @php
-                $categories = [
-                    ['name' => 'Fiction', 'icon' => '📚', 'color' => 'from-blue-500 to-blue-600'],
-                    ['name' => 'Science Fiction', 'icon' => '🚀', 'color' => 'from-purple-500 to-purple-600'],
-                    ['name' => 'Romance', 'icon' => '💕', 'color' => 'from-pink-500 to-pink-600'],
-                    ['name' => 'Fantasy', 'icon' => '🐉', 'color' => 'from-indigo-500 to-indigo-600'],
-                    ['name' => 'Mystery', 'icon' => '🔍', 'color' => 'from-gray-700 to-gray-800'],
-                    ['name' => 'Non-Fiction', 'icon' => '📖', 'color' => 'from-green-500 to-green-600'],
-                    ['name' => 'Self-Help', 'icon' => '💡', 'color' => 'from-yellow-500 to-yellow-600'],
-                    ['name' => 'Biography', 'icon' => '👤', 'color' => 'from-red-500 to-red-600'],
-                ];
-            @endphp
-
-            @foreach ($categories as $category)
-                <a href="{{ route('books.index', ['category' => $category['name']]) }}"
+            @forelse($categories as $category)
+                <a href="{{ route('books.index', ['category_id' => $category->id]) }}"
                     class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-6 text-center">
-                    <div class="text-5xl mb-3">{{ $category['icon'] }}</div>
+                    <div class="text-5xl mb-3">{{ $category->icon ?? '📚' }}</div>
                     <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition">
-                        {{ $category['name'] }}</h3>
+                        {{ $category->name }}</h3>
                 </a>
-            @endforeach
+            @empty
+                <div class="col-span-full text-center text-gray-500 py-8">
+                    <p>No categories available at the moment.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 

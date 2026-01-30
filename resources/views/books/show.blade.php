@@ -10,7 +10,11 @@
                 <a href="{{ route('home') }}" class="text-gray-500 hover:text-indigo-600">Home</a>
                 <span class="mx-2 text-gray-400">/</span>
                 <a href="{{ route('books.index') }}" class="text-gray-500 hover:text-indigo-600">Books</a>
-                @if ($book->category)
+                @if ($book->category_id && $book->category)
+                    <span class="mx-2 text-gray-400">/</span>
+                    <a href="{{ route('books.index', ['category_id' => $book->category_id]) }}"
+                        class="text-gray-500 hover:text-indigo-600">{{ $book->category->name }}</a>
+                @elseif ($book->category)
                     <span class="mx-2 text-gray-400">/</span>
                     <a href="{{ route('books.index', ['category' => $book->category]) }}"
                         class="text-gray-500 hover:text-indigo-600">{{ $book->category }}</a>
@@ -118,7 +122,19 @@
                                     <dd class="text-gray-900">{{ $book->isbn }}</dd>
                                 </div>
                             @endif
-                            @if ($book->category)
+                            @if ($book->category_id && $book->category)
+                                <div class="flex border-b border-gray-100 pb-3">
+                                    <dt class="font-semibold text-gray-700 w-32">Category:</dt>
+                                    <dd>
+                                        <a href="{{ route('books.index', ['category_id' => $book->category_id]) }}"
+                                            class="text-indigo-600 hover:text-indigo-700 font-medium">
+                                            @if ($book->category->icon)
+                                                <span class="mr-1">{{ $book->category->icon }}</span>
+                                            @endif{{ $book->category->name }}
+                                        </a>
+                                    </dd>
+                                </div>
+                            @elseif ($book->category)
                                 <div class="flex border-b border-gray-100 pb-3">
                                     <dt class="font-semibold text-gray-700 w-32">Category:</dt>
                                     <dd>
@@ -218,12 +234,12 @@
     </div>
 
     <!-- Related Books Section -->
-    @if ($book->category)
+    @if ($book->category_id && $book->category)
         <div class="bg-gray-50 py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900">More {{ $book->category }} Books</h2>
-                    <a href="{{ route('books.index', ['category' => $book->category]) }}"
+                    <h2 class="text-3xl font-bold text-gray-900">More {{ $book->category->name }} Books</h2>
+                    <a href="{{ route('books.index', ['category_id' => $book->category_id]) }}"
                         class="text-indigo-600 hover:text-indigo-700 font-medium">
                         View All →
                     </a>
@@ -231,42 +247,65 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     @php
-                        $relatedBooks = \App\Models\Book::where('category', $book->category)
+                        $relatedBooks = \App\Models\Book::where('category_id', $book->category_id)
                             ->where('id', '!=', $book->id)
                             ->where('status', 'available')
-                            ->with('user')
                             ->latest()
                             ->take(5)
                             ->get();
                     @endphp
-
-                    @foreach ($relatedBooks as $relatedBook)
-                        <a href="{{ route('books.show', $relatedBook) }}"
-                            class="bg-white rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden group">
-                            @if ($relatedBook->image)
-                                <img src="{{ asset('storage/' . $relatedBook->image) }}" alt="{{ $relatedBook->title }}"
-                                    class="w-full h-64 object-cover group-hover:opacity-90 transition">
-                            @else
-                                <div
-                                    class="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                    <svg class="w-16 h-16 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-                                    </svg>
-                                </div>
-                            @endif
-                            <div class="p-4">
-                                <h3
-                                    class="font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition">
-                                    {{ $relatedBook->title }}
-                                </h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $relatedBook->author }}</p>
-                                <p class="text-indigo-600 font-bold mt-2">${{ number_format($relatedBook->price, 2) }}</p>
+                @elseif ($book->category)
+                    <div class="bg-gray-50 py-16">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-3xl font-bold text-gray-900">More {{ $book->category }} Books</h2>
+                                <a href="{{ route('books.index', ['category' => $book->category]) }}"
+                                    class="text-indigo-600 hover:text-indigo-700 font-medium">
+                                    View All →
+                                </a>
                             </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                                @php
+                                    $relatedBooks = \App\Models\Book::where('category', $book->category)
+                                        ->where('id', '!=', $book->id)
+                                        ->where('status', 'available')
+                                        ->with('user')
+                                        ->latest()
+                                        ->take(5)
+                                        ->get();
+                                @endphp
+
+                                @foreach ($relatedBooks as $relatedBook)
+                                    <a href="{{ route('books.show', $relatedBook) }}"
+                                        class="bg-white rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden group">
+                                        @if ($relatedBook->image)
+                                            <img src="{{ asset('storage/' . $relatedBook->image) }}"
+                                                alt="{{ $relatedBook->title }}"
+                                                class="w-full h-64 object-cover group-hover:opacity-90 transition">
+                                        @else
+                                            <div
+                                                class="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                                <svg class="w-16 h-16 text-gray-300" fill="currentColor"
+                                                    viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                        <div class="p-4">
+                                            <h3
+                                                class="font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition">
+                                                {{ $relatedBook->title }}
+                                            </h3>
+                                            <p class="text-sm text-gray-600 mt-1">{{ $relatedBook->author }}</p>
+                                            <p class="text-indigo-600 font-bold mt-2">
+                                                ${{ number_format($relatedBook->price, 2) }}</p>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
     @endif
 @endsection

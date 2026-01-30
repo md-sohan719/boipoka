@@ -64,9 +64,11 @@
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Browse by Category</h2>
                 <div class="flex flex-wrap gap-3">
                     @foreach ($categories as $cat)
-                        <a href="{{ route('books.index', ['category' => $cat]) }}"
-                            class="px-5 py-2 rounded-full {{ request('category') === $cat ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-indigo-50' }} shadow-sm hover:shadow transition">
-                            {{ $cat }}
+                        <a href="{{ route('books.index', ['category_id' => $cat->id]) }}"
+                            class="px-5 py-2 rounded-full {{ request('category_id') == $cat->id ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-indigo-50' }} shadow-sm hover:shadow transition">
+                            @if ($cat->icon)
+                                <span class="mr-1">{{ $cat->icon }}</span>
+                            @endif{{ $cat->name }}
                         </a>
                     @endforeach
                 </div>
@@ -85,7 +87,12 @@
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h2 class="text-2xl font-bold text-gray-900">
-                    @if (request('category'))
+                    @if (request('category_id'))
+                        @php
+                            $selectedCategory = $categories->firstWhere('id', request('category_id'));
+                        @endphp
+                        {{ $selectedCategory ? $selectedCategory->name : 'Category' }} Books
+                    @elseif (request('category'))
                         {{ request('category') }} Books
                     @elseif(request('type') === 'sell')
                         Books for Sale
@@ -187,23 +194,28 @@
         !request()->has('search') &&
             !request()->has('type') &&
             !request()->has('category') &&
+            !request()->has('category_id') &&
             isset($categoryBooks) &&
             count($categoryBooks) > 0)
         <div class="bg-gray-50 py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                @foreach ($categoryBooks as $cat => $items)
-                    @if ($items->count() > 0)
+                @foreach ($categoryBooks as $catId => $data)
+                    @if ($data['books']->count() > 0)
                         <div class="mb-12">
                             <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-3xl font-bold text-gray-900">{{ $cat }}</h2>
-                                <a href="{{ route('books.index', ['category' => $cat]) }}"
+                                <h2 class="text-3xl font-bold text-gray-900">
+                                    @if ($data['category']->icon)
+                                        <span class="mr-2">{{ $data['category']->icon }}</span>
+                                    @endif{{ $data['category']->name }}
+                                </h2>
+                                <a href="{{ route('books.index', ['category_id' => $data['category']->id]) }}"
                                     class="text-indigo-600 hover:text-indigo-700 font-medium">
                                     View All →
                                 </a>
                             </div>
 
                             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                @foreach ($items->take(6) as $book)
+                                @foreach ($data['books']->take(6) as $book)
                                     <a href="{{ route('books.show', $book) }}"
                                         class="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden group">
                                         @if ($book->image)

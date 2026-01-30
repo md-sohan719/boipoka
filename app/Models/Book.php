@@ -19,6 +19,7 @@ class Book extends Model
         'condition',
         'listing_type',
         'category',
+        'category_id',
         'publication_year',
         'language',
         'image',
@@ -38,6 +39,11 @@ class Book extends Model
     public function buyer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function exchangeRequests(): HasMany

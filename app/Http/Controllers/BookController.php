@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +29,10 @@ class BookController extends Controller
             $query->where('category', $request->category);
         }
 
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -40,7 +45,7 @@ class BookController extends Controller
         $books = $query->latest()->paginate(12);
 
         // Categories for the homepage category list
-        $categories = Book::whereNotNull('category')->distinct()->pluck('category');
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
 
         // Featured books (latest 6)
         $featured = Book::with('user')->available()->latest()->take(6)->get();
@@ -48,12 +53,15 @@ class BookController extends Controller
         // Grouped books per category for homepage sections (limit categories and books)
         $categoryBooks = [];
         foreach ($categories->take(8) as $cat) {
-            $categoryBooks[$cat] = Book::with('user')
-                ->available()
-                ->where('category', $cat)
-                ->latest()
-                ->take(8)
-                ->get();
+            $categoryBooks[$cat->id] = [
+                'category' => $cat,
+                'books' => Book::with('user')
+                    ->available()
+                    ->where('category_id', $cat->id)
+                    ->latest()
+                    ->take(8)
+                    ->get()
+            ];
         }
 
         return view('books.index', compact('books', 'categories', 'featured', 'categoryBooks'));
@@ -64,7 +72,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view('books.create');
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        return view('books.create', compact('categories'));
     }
 
     /**
@@ -81,6 +90,7 @@ class BookController extends Controller
             'condition' => 'required|in:new,like_new,very_good,good,acceptable',
             'listing_type' => 'required|in:sell,exchange,both',
             'category' => 'nullable|string|max:100',
+            'category_id' => 'nullable|exists:categories,id',
             'publication_year' => 'nullable|integer|min:1000|max:' . date('Y'),
             'language' => 'required|string|max:50',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -102,7 +112,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book->load('user');
+        $book->load(['user', 'category']);
         return view('books.show', compact('book'));
     }
 
@@ -112,7 +122,8 @@ class BookController extends Controller
     public function edit(Book $book)
     {
         $this->authorize('update', $book);
-        return view('books.edit', compact('book'));
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        return view('books.edit', compact('book', 'categories'));
     }
 
     /**
@@ -131,6 +142,7 @@ class BookController extends Controller
             'condition' => 'required|in:new,like_new,very_good,good,acceptable',
             'listing_type' => 'required|in:sell,exchange,both',
             'category' => 'nullable|string|max:100',
+            'category_id' => 'nullable|exists:categories,id',
             'publication_year' => 'nullable|integer|min:1000|max:' . date('Y'),
             'language' => 'required|string|max:50',
             'status' => 'required|in:available,sold,exchanged,reserved',

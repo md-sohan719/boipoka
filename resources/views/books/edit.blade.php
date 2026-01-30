@@ -126,12 +126,21 @@
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <!-- Category -->
                             <div>
-                                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                                <input type="text" name="category" id="category"
-                                    value="{{ old('category', $book->category) }}"
-                                    placeholder="e.g., Fiction, Science, History"
+                                <label for="category_id"
+                                    class="block text-sm font-medium text-gray-700">Category</label>
+                                <select name="category_id" id="category_id"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                @error('category')
+                                    <option value="">Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id', $book->category_id) == $category->id ? 'selected' : '' }}>
+                                            @if ($category->icon)
+                                                {{ $category->icon }}
+                                            @endif{{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>

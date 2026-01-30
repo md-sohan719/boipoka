@@ -3,10 +3,12 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookExchangeController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $categories = Category::where('is_active', true)->orderBy('name')->get();
+    return view('welcome', compact('categories'));
 })->name('home');
 
 Route::get('/dashboard', function () {
@@ -47,6 +49,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'deleteUser'])->name('users.delete');
     Route::delete('/books/{book}', [App\Http\Controllers\Admin\AdminController::class, 'deleteBook'])->name('books.delete');
     Route::patch('/users/{user}/role', [App\Http\Controllers\Admin\AdminController::class, 'updateUserRole'])->name('users.update-role');
+
+    // Category management routes
+    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
 });
 
 require __DIR__ . '/auth.php';
