@@ -958,4 +958,5 @@ return [
 	"Sorry_no_data_found_related_to_your_search" => "Sorry no data found related to your search",
 	"Already_have_account_" => "Already have account ",
 	"currently_no_payment_gateway_supported_for_USD_currency." => "Currently no payment gateway supported for USD currency.",
+	"ex:United_States_Dollar" => "Ex:United States Dollar",
 ];
