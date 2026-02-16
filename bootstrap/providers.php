@@ -5,7 +5,7 @@ return [
     App\Providers\AuthServiceProvider::class,
     // App\Providers\BroadcastServiceProvider::class, // enable if you use broadcasting
     // App\Providers\EventServiceProvider::class,
-    App\Providers\FirebaseServiceProvider::class,
+    // App\Providers\FirebaseServiceProvider::class, // Disabled temporarily
     App\Providers\RouteServiceProvider::class,
     App\Providers\MailConfigServiceProvider::class,
     App\Providers\PaymentConfigProvider::class,

@@ -14,7 +14,11 @@ class FirebaseController extends Controller
 
     public function __construct()
     {
-        $this->messaging = app('firebase.messaging');
+        try {
+            $this->messaging = app('firebase.messaging');
+        } catch (\Exception $e) {
+            $this->messaging = null;
+        }
     }
 
     public function subscribeToTopic(Request $request): JsonResponse

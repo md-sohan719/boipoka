@@ -36,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+        $this->configureRateLimiting();
     }
 
     /**
@@ -45,8 +46,16 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapInstallRoutes();
+        $this->mapApiRoutes();
+        $this->mapApiv2Routes();
+        $this->mapApiv3Routes();
+
+        //$this->mapInstallRoutes();
         //$this->mapUpdateRoutes();
+
+        $this->mapBetaAdminRoutes();
+        $this->mapBetaVendorRoutes();
+        $this->mapBetaWebRoutes();
     }
 
     /**
