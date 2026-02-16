@@ -956,4 +956,6 @@ return [
 	"Sign_in_to_OpenAI,_create_an_API_key,_and_use_it_here." => "Sign in to OpenAI, create an API key, and use it here.",
 	"Disabling_this_will_hide_AI_features_from_admin,_vendor_panel,_and_vendor_app" => "Disabling this will hide AI features from admin, vendor panel, and vendor app",
 	"Sorry_no_data_found_related_to_your_search" => "Sorry no data found related to your search",
+	"Already_have_account_" => "Already have account ",
+	"currently_no_payment_gateway_supported_for_USD_currency." => "Currently no payment gateway supported for USD currency.",
 ];
