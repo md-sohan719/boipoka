@@ -90,9 +90,7 @@ class ProductController extends BaseController
         private readonly BannerRepositoryInterface                  $bannerRepo,
         private readonly ShopRepositoryInterface                    $shopRepo,
         private readonly ProductService                             $productService,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @param Request|null $request
@@ -133,7 +131,9 @@ class ProductController extends BaseController
                 return $query->with(['tax'])->wherehas('tax', function ($query) {
                     return $query->where('is_active', 1);
                 });
-            }], dataLimit: $paginationLimit);
+            }],
+            dataLimit: $paginationLimit
+        );
 
         $sellers = $this->sellerRepo->getByStatusExcept(status: 'pending', relations: ['shop'], paginateBy: $paginationLimit);
         $brands = $this->brandRepo->getListWhere(orderBy: ['id' => 'desc'], dataLimit: 'all');
@@ -181,6 +181,11 @@ class ProductController extends BaseController
         $shopId = getInHouseShopConfig('id');
         $dataArray = $service->getAddProductData(request: $request, addedBy: 'admin', shopId: $shopId);
         $savedProduct = $this->productRepo->add(data: $dataArray);
+
+        // Update slug with product ID (format: url-id)
+        $slugWithId = $savedProduct->slug . '-' . $savedProduct->id;
+        $this->productRepo->update(id: $savedProduct->id, data: ['slug' => $slugWithId]);
+
         $this->productRepo->addRelatedTags(request: $request, product: $savedProduct);
         $this->translationRepo->add(request: $request, model: 'App\Models\Product', id: $savedProduct->id);
         $this->updateProductAuthorAndPublishingHouse(request: $request, product: $savedProduct);
@@ -809,7 +814,6 @@ class ProductController extends BaseController
         }
         ToastMagic::success($dataArray['message']);
         return back();
-
     }
 
     public function updatedProductList(Request $request): View
@@ -940,7 +944,9 @@ class ProductController extends BaseController
                 return $query->with(['tax'])->wherehas('tax', function ($query) {
                     return $query->where('is_active', 1);
                 });
-            }], dataLimit: getWebConfig(name: WebConfigKey::PAGINATION_LIMIT));
+            }],
+            dataLimit: getWebConfig(name: WebConfigKey::PAGINATION_LIMIT)
+        );
 
         $products->map(function ($product) {
             if ($product->product_type == 'physical' && count(json_decode($product->choice_options)) > 0 || count(json_decode($product->colors)) > 0) {
@@ -990,7 +996,6 @@ class ProductController extends BaseController
         } else {
             return response()->json(['status' => 'multiple_product', 'product_count' => $products->count()]);
         }
-
     }
 
     public function getMultipleProductDetailsView(Request $request): JsonResponse
@@ -1111,5 +1116,4 @@ class ProductController extends BaseController
         ];
         return Excel::download(new RestockProductListExport($data), 'restock-product-list.xlsx');
     }
-
 }

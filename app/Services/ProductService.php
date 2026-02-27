@@ -8,13 +8,12 @@ use App\Models\Color;
 use App\Traits\FileManagerTrait;
 use Illuminate\Support\Str;
 use Rap2hpoutre\FastExcel\FastExcel;
+
 class ProductService
 {
     use FileManagerTrait;
 
-    public function __construct(private readonly Color $color)
-    {
-    }
+    public function __construct(private readonly Color $color) {}
 
     public function getProcessedImages(object $request): array
     {
@@ -80,7 +79,6 @@ class ProductService
             'image_names' => $imageNames ?? [],
             'colored_image_names' => $colorImageSerial ?? []
         ];
-
     }
 
     public function getProcessedUpdateImages(object $request, object $product): array
@@ -316,6 +314,12 @@ class ProductService
 
     public function getSlug(object $request): string
     {
+        // If slug is provided in request, use it
+        if ($request->has('slug') && !empty($request['slug'])) {
+            return Str::slug($request['slug'], '-');
+        }
+
+        // Otherwise, auto-generate from product name
         return Str::slug($request['name'][array_search('en', $request['lang'])], '-') . '-' . Str::random(6);
     }
 
@@ -517,7 +521,7 @@ class ProductService
         $processedImages = $this->getProcessedImages(request: $request); //once the images are processed do not call this function again just use the variable
         $combinations = $this->getCombinations($this->getOptions(request: $request));
         $variations = $this->getVariations(request: $request, combinations: $combinations);
-        $stockCount = isset($combinations[0]) && count($combinations[0]) > 0 ? $this->getTotalQuantity(variations: $variations) : (integer)$request['current_stock'];
+        $stockCount = isset($combinations[0]) && count($combinations[0]) > 0 ? $this->getTotalQuantity(variations: $variations) : (int)$request['current_stock'];
 
         $digitalFile = '';
         if ($request['product_type'] == 'digital' && $request['digital_product_type'] == 'ready_product' && $request['digital_file_ready']) {
@@ -543,7 +547,7 @@ class ProductService
             'category_id' => $request['category_id'],
             'sub_category_id' => $request['sub_category_id'],
             'sub_sub_category_id' => $request['sub_sub_category_id'],
-            'brand_id' => $request['product_type'] == "physical" ? ( $request['brand_id'] ?? null) : null,
+            'brand_id' => $request['product_type'] == "physical" ? ($request['brand_id'] ?? null) : null,
             'unit' => $request['product_type'] == 'physical' ? $request['unit'] : null,
             'digital_product_type' => $request['product_type'] == 'digital' ? $request['digital_product_type'] : null,
             'digital_file_ready' => $digitalFile,
@@ -589,7 +593,7 @@ class ProductService
         $processedImages = $this->getProcessedUpdateImages(request: $request, product: $product);
         $combinations = $this->getCombinations($this->getOptions(request: $request));
         $variations = $this->getVariations(request: $request, combinations: $combinations);
-        $stockCount = isset($combinations[0]) && count($combinations[0]) > 0 ? $this->getTotalQuantity(variations: $variations) : (integer)$request['current_stock'];
+        $stockCount = isset($combinations[0]) && count($combinations[0]) > 0 ? $this->getTotalQuantity(variations: $variations) : (int)$request['current_stock'];
 
         if ($request->has('extensions_type') && $request->has('digital_product_variant_key')) {
             $digitalFile = null;
@@ -614,6 +618,7 @@ class ProductService
         $dataArray = [
             'name' => $request['name'][array_search('en', $request['lang'])],
             'code' => $request['code'],
+            'slug' => $this->getSlug($request),
             'product_type' => $request['product_type'],
             'category_ids' => json_encode($this->getCategoriesArray(request: $request)),
             'category_id' => $request['category_id'],
@@ -720,7 +725,8 @@ class ProductService
             'category_id',
             'sub_category_id',
             'sub_sub_category_id',
-            'brand_id', 'unit',
+            'brand_id',
+            'unit',
             'minimum_order_qty',
             'status',
             'refundable',

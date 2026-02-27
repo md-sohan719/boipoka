@@ -965,4 +965,7 @@ return [
 	"The_image_must_be_a_file_of_type_jpeg_jpg_png_gif" => "The image must be a file of type jpeg jpg png gif",
 	"Sub_Category_Added_Successfully" => "Sub Category Added Successfully",
 	"Code_with_a_minimum_length_requirement_of_6_characters" => "Code with a minimum length requirement of 6 characters",
+	"Product_URL" => "Product URL",
+	"product_url_is_required" => "Product url is required",
+	"URL_will_be_auto_generated_from_product_name_You_can_edit_it_manually" => "URL will be auto generated from product name You can edit it manually",
 ];
