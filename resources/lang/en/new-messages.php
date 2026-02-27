@@ -959,4 +959,10 @@ return [
 	"Already_have_account_" => "Already have account ",
 	"currently_no_payment_gateway_supported_for_USD_currency." => "Currently no payment gateway supported for USD currency.",
 	"ex:United_States_Dollar" => "Ex:United States Dollar",
+	"no_category_found" => "No category found",
+	"no_sub_category_found" => "No sub category found",
+	"Main_Category_is_required" => "Main Category is required",
+	"The_image_must_be_a_file_of_type_jpeg_jpg_png_gif" => "The image must be a file of type jpeg jpg png gif",
+	"Sub_Category_Added_Successfully" => "Sub Category Added Successfully",
+	"Code_with_a_minimum_length_requirement_of_6_characters" => "Code with a minimum length requirement of 6 characters",
 ];
